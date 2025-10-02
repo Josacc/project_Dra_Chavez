@@ -119,12 +119,9 @@ plot_treemap_numcomplicaciones_escolaridad <-
       label = str_c(Grupo, str_c(round(Porcentaje, digits = 2), '%'), sep = '\n\n')
     )
   ) +
-  geom_treemap(start = 'topleft') +
+  geom_treemap(start = 'topleft', show.legend = FALSE) +
   geom_treemap_text(colour = "white", place = "centre", size = 10, start = 'topleft') +
   scale_fill_gradient(
     low    = "#56b0f6",
-    high   = "#132a42",
-    name   = 'Frecuencia',
-    breaks = c(9, 18, 27),
-    labels = scales::percent(c(9, 18, 27), scale = 1)
+    high   = "#132a42"
   )

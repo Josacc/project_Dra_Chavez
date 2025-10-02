@@ -18,7 +18,12 @@ plot_treemap_tipocomplicacion_escolaridad <-
     )
   ) %>%
   count(ESCOLARIDAD, COMPLICACION_ACTUAL, name = 'Conteo', sort = TRUE) %>%
-  transmute(Grupo = fct_inorder(str_c(COMPLICACION_ACTUAL, ESCOLARIDAD, sep = '\n\n')), Conteo) %>%
+  transmute(
+    Grupo = fct_inorder(
+      str_c(str_c("Complicación: ", COMPLICACION_ACTUAL), str_c("Escolaridad: ", ESCOLARIDAD), sep = '\n\n')
+    ),
+    Conteo
+  ) %>%
   filter(!is.na(Grupo)) %>%
   mutate(Porcentaje = (Conteo / sum(Conteo)) * 100) %>%
   ggplot(
@@ -28,14 +33,11 @@ plot_treemap_tipocomplicacion_escolaridad <-
       label = str_c(Grupo, str_c(round(Porcentaje, digits = 2), '%'), sep = '\n\n')
     )
   ) +
-  geom_treemap(start = 'topleft') +
+  geom_treemap(start = 'topleft', show.legend = FALSE) +
   geom_treemap_text(colour = "white", place = "centre", size = 10, start = 'topleft') +
   scale_fill_gradient(
     low    = "#56b0f6",
-    high   = "#132a42",
-    name   = 'Frecuencia',
-    breaks = c(6, 12, 18, 24),
-    labels = scales::percent(c(6, 12, 18, 24), scale = 1)
+    high   = "#132a42"
   )
 
 

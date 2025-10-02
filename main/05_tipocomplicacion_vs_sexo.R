@@ -3,6 +3,80 @@
 
 # First analysis ----------------------------------------------------------
 
+# Tabla de contingencia
+# Variables: tipo de complicación & sexo
+table_cont_tipocomplicacion_sexo <-
+  data_main %>%
+  select(SEXO, COMPLICACION_ACTUAL) %>%
+  mutate(
+    SEXO = str_replace_all(
+      SEXO, c(
+        '^F$' = 'MUJER',
+        '^M$' = 'HOMBRE'
+      )
+    )
+  ) %>%
+  table() %>%
+  as.data.frame.matrix() %>%
+  mutate(across(everything(), as.character)) %>%
+  map2_df(
+    .y = (
+      data_main %>%
+        select(SEXO, COMPLICACION_ACTUAL) %>%
+        mutate(
+          SEXO = str_replace_all(
+            SEXO, c(
+              '^F$' = 'MUJER',
+              '^M$' = 'HOMBRE'
+            )
+          )
+        ) %>%
+        table() %>%
+        prop.table() %>%
+        round(4) %>%
+        `*`(100) %>%
+        as.data.frame.matrix() %>%
+        mutate(across(everything(), ~ str_c(" ", "(", .x, "%", ")")))
+    ),
+    ~str_c(.x, .y),
+    .id = "colname"
+  ) %>%
+  datatable(
+    rownames = c("HOMBRE", "MUJER"),
+    class    = "compact stripe cell-border hover row-border",
+    options  = list(
+      ordering     = FALSE,
+      dom          = "t",
+      columnDefs   = list(list(targets = c(1:6), className = "dt-center" )),
+      initComplete = JS(
+        "function(settings, json) {",
+        "$('table').css({'font-size': '12px'});",
+        "}"
+      )
+    )
+  )
+
+
+
+data_main %>%
+  select(SEXO, COMPLICACION_ACTUAL) %>%
+  mutate(
+    SEXO = str_replace_all(
+      SEXO, c(
+        '^F$' = 'MUJER',
+        '^M$' = 'HOMBRE'
+      )
+    )
+  ) %>%
+  table() %>%
+  prop.table() %>%
+  round(4) %>%
+  `*`(100) %>%
+  as.data.frame.matrix() %>%
+  mutate(across(everything(), ~ str_c(" ", "(", .x, "%", ")")))
+
+
+
 # Test: χ2 de Pearson
 # Variables: tipo de complicación & sexo
 chi2_tipocomplicacion_sexo <-
@@ -17,13 +91,15 @@ table_chi2_tipocomplicacion_sexo <-
     !!chi2_tipocomplicacion_sexo$method := c(
       str_c(names(chi2_tipocomplicacion_sexo$statistic), " = ", round(chi2_tipocomplicacion_sexo$statistic, 3)),
       str_c(names(chi2_tipocomplicacion_sexo$parameter), " = ", round(chi2_tipocomplicacion_sexo$parameter, 3)),
-      str_c("p-value",                                     " = ", round(chi2_tipocomplicacion_sexo$p.value, 3))
+      str_c("p-value",                                   " = ", round(chi2_tipocomplicacion_sexo$p.value, 3))
     )
   ) %>%
   datatable(
     rownames = FALSE,
-    options  = list(ordering = FALSE, dom = "t", columnDefs = list(list(targets = 0, className = "dt-center" ))), width = "400px"
+    options  = list(ordering = FALSE, dom = "t", columnDefs = list(list(targets = 0, className = "dt-center" ))),
+    width    = "400px"
   )
+
 
 
 # Plot: treemap-plot
@@ -41,7 +117,7 @@ plot_treemap_tipocomplicacion_sexo <-
   ) %>%
   transmute(
     Grupo = fct_inorder(
-      str_c(str_c("Tipo de complicación: ", COMPLICACION_ACTUAL), str_c("Sexo: ", SEXO), sep = '\n\n')
+      str_c(str_c("Complicación: ", COMPLICACION_ACTUAL), str_c("Sexo: ", SEXO), sep = '\n\n')
     ),
     Conteo
   ) %>%
@@ -67,7 +143,6 @@ plot_treemap_tipocomplicacion_sexo <-
     legend.position = "bottom",
     legend.box      = "horizontal"
   )
-
 
 
 

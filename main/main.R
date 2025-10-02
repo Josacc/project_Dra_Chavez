@@ -1,4 +1,4 @@
-# Project Dra. Montserrat Ch.
+# Project Dra. Chávez.
 # By Josacc
 
 analysis_files <- list.files("main/", pattern = "^\\d.+\\.R$", full.names = TRUE)
