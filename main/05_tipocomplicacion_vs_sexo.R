@@ -1,6 +1,7 @@
 # Tipo de complicación asociada vs Sexo
 
 
+
 # First analysis ----------------------------------------------------------
 
 # Tabla de contingencia
@@ -50,30 +51,11 @@ table_cont_tipocomplicacion_sexo <-
       columnDefs   = list(list(targets = c(1:6), className = "dt-center" )),
       initComplete = JS(
         "function(settings, json) {",
-        "$('table').css({'font-size': '12px'});",
+        "$(this.api().table().node()).css({'font-size': '12px'});",
         "}"
       )
     )
   )
-
-
-
-data_main %>%
-  select(SEXO, COMPLICACION_ACTUAL) %>%
-  mutate(
-    SEXO = str_replace_all(
-      SEXO, c(
-        '^F$' = 'MUJER',
-        '^M$' = 'HOMBRE'
-      )
-    )
-  ) %>%
-  table() %>%
-  prop.table() %>%
-  round(4) %>%
-  `*`(100) %>%
-  as.data.frame.matrix() %>%
-  mutate(across(everything(), ~ str_c(" ", "(", .x, "%", ")")))
 
 
 

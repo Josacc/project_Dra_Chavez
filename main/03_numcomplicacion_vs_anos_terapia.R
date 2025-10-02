@@ -1,8 +1,75 @@
-# Cantidad de complicaciones vs Años de terapia
+# Número de complicaciones vs Años de terapia
 
 
 
 # First analysis ----------------------------------------------------------
+
+# Tabla de contingencia
+# Variables: tiempo de terapia & número de complicaciones
+table_cont_tiempoterapia_numcomplicaciones <-
+  data_main %>%
+  select(N_COMPLICACION, ANOS_TERAPIA) %>%
+  mutate(
+    N_COMPLICACION = str_replace_all(
+      N_COMPLICACION, c(
+        '0' = 'NINGUNA',
+        '1' = 'PRIMERA',
+        '2' = 'SEGUNDA',
+        '3' = 'TERCERA'
+      )
+    )
+  ) %>%
+  mutate(
+    N_COMPLICACION = factor(N_COMPLICACION, levels = c('TERCERA', 'SEGUNDA', 'PRIMERA', 'NINGUNA'))
+  ) %>%
+  mutate(ANOS_TERAPIA = fct(as.character(ANOS_TERAPIA), levels = c("1",  "2",  "3",  "4",  "5",  "6",  "7",  "8",  "9", "17"))) %>%
+  table() %>%
+  as.data.frame.matrix() %>%
+  mutate(across(everything(), as.character)) %>%
+  map2_df(
+    .y = (
+      data_main %>%
+        select(N_COMPLICACION, ANOS_TERAPIA) %>%
+        mutate(
+          N_COMPLICACION = str_replace_all(
+            N_COMPLICACION, c(
+              '0' = 'NINGUNA',
+              '1' = 'PRIMERA',
+              '2' = 'SEGUNDA',
+              '3' = 'TERCERA'
+            )
+          )
+        ) %>%
+        mutate(
+          N_COMPLICACION = factor(N_COMPLICACION, levels = c('TERCERA', 'SEGUNDA', 'PRIMERA', 'NINGUNA'))
+        ) %>%
+        mutate(ANOS_TERAPIA = fct(as.character(ANOS_TERAPIA), levels = c("1",  "2",  "3",  "4",  "5",  "6",  "7",  "8",  "9", "17"))) %>%
+        table() %>%
+        prop.table() %>%
+        round(3) %>%
+        `*`(100) %>%
+        as.data.frame.matrix() %>%
+        mutate(across(everything(), ~ str_c(" ", "(", .x, "%", ")")))
+    ),
+    ~str_c(.x, .y),
+    .id = "colname"
+  ) %>%
+  datatable(
+    rownames = c('TERCERA', 'SEGUNDA', 'PRIMERA', 'NINGUNA'),
+    class    = "compact stripe cell-border hover row-border",
+    options  = list(
+      ordering     = FALSE,
+      dom          = "t",
+      columnDefs   = list(list(targets = c(1:10), className = "dt-center" )),
+      initComplete = JS(
+        "function(settings, json) {",
+        "$(this.api().table().node()).css({'font-size': '12px'});",
+        "}"
+      )
+    )
+  )
+
+
 
 # Plot: mosaic
 # Mosaico de frecuencia combinada: tiempo de terapia & número de complicaciones
@@ -59,23 +126,6 @@ table_chi2_tiempo_complicacion <-
     rownames = FALSE,
     options  = list(ordering = FALSE, dom = "t", columnDefs = list(list(targets = 0, className = "dt-center" ))), width = "400px"
   )
-
-
-tabla <- matrix(
-  c(0, 15, 18, 10,
-    3, 23, 44, 22,
-    0, 18, 22, 19,
-    2, 15, 31, 16,
-    0, 15, 24, 14,
-    1,  3, 17,  9,
-    0,  1, 10,  1,
-    1,  5,  5,  7,
-    0,  2,  2,  2,
-    0,  2,  3,  1),
-  ncol = 4, byrow = TRUE
-)
-rownames(tabla) <- c("1", "2", "3", "4", "5", "6", "7", "8", "9", "17")
-colnames(tabla) <- c("cero", "una", "dos", "tres")
 
 
 

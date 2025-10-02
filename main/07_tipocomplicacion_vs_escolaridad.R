@@ -4,6 +4,63 @@
 
 # First analysis ----------------------------------------------------------
 
+# Tabla de contingencia
+# Variables: tipo de complicación & escolaridad
+table_cont_tipocomplicacion_escolaridad <-
+  data_main %>%
+  select(ESCOLARIDAD, COMPLICACION_ACTUAL) %>%
+  mutate(
+    ESCOLARIDAD = str_replace_all(
+      ESCOLARIDAD, c(
+        '^(SECUNDARIA)'   = 'MEDIA',
+        '^(PREPARATORIA)' = 'MEDIA',
+        '^(LICENCIATURA)' = 'SUPERIOR'
+      )
+    )
+  ) %>%
+  table() %>%
+  as.data.frame.matrix() %>%
+  mutate(across(everything(), as.character)) %>%
+  map2_df(
+    .y = (
+      data_main %>%
+        select(ESCOLARIDAD, COMPLICACION_ACTUAL) %>%
+        mutate(
+          ESCOLARIDAD = str_replace_all(
+            ESCOLARIDAD, c(
+              '^(SECUNDARIA)'   = 'MEDIA',
+              '^(PREPARATORIA)' = 'MEDIA',
+              '^(LICENCIATURA)' = 'SUPERIOR'
+            )
+          )
+        ) %>%
+        table() %>%
+        prop.table() %>%
+        round(4) %>%
+        `*`(100) %>%
+        as.data.frame.matrix() %>%
+        mutate(across(everything(), ~ str_c(" ", "(", .x, "%", ")")))
+    ),
+    ~str_c(.x, .y),
+    .id = "colname"
+  ) %>%
+  datatable(
+    rownames = c("MEDIA", "SUPERIOR"),
+    class    = "compact stripe cell-border hover row-border",
+    options  = list(
+      ordering     = FALSE,
+      dom          = "t",
+      columnDefs   = list(list(targets = c(1:6), className = "dt-center" )),
+      initComplete = JS(
+        "function(settings, json) {",
+        "$(this.api().table().node()).css({'font-size': '12px'});",
+        "}"
+      )
+    )
+  )
+
+
+
 # Plot: treemap-plot
 # Treemap de estructura y distribución de valores por tipo de complicación & escolaridad
 plot_treemap_tipocomplicacion_escolaridad <-

@@ -1,8 +1,86 @@
-# Cantidad de complicaciones vs Escolaridad
+# Número de complicaciones vs Escolaridad
 
 
 
 # First analysis ----------------------------------------------------------
+
+# Tabla de contingencia
+# Variables: número de complicaciones & escolaridad
+table_cont_numcomplicacion_escolaridad <-
+  data_main %>%
+  select(ESCOLARIDAD, N_COMPLICACION) %>%
+  mutate(
+    ESCOLARIDAD = str_replace_all(
+      ESCOLARIDAD, c(
+        '^(SECUNDARIA)'   = 'MEDIA',
+        '^(PREPARATORIA)' = 'MEDIA',
+        '^(LICENCIATURA)' = 'SUPERIOR'
+      )
+    )
+  ) %>%
+  mutate(N_COMPLICACION = as.character(N_COMPLICACION)) %>%
+  mutate(
+    N_COMPLICACION = str_replace_all(
+      N_COMPLICACION, c(
+        '0' = 'NINGUNA',
+        '1' = 'PRIMERA',
+        '2' = 'SEGUNDA',
+        '3' = 'TERCERA'
+      )
+    )
+  ) %>%
+  table() %>%
+  as.data.frame.matrix() %>%
+  mutate(across(everything(), as.character)) %>%
+  map2_df(
+    .y = (
+      data_main %>%
+        select(ESCOLARIDAD, N_COMPLICACION) %>%
+        mutate(
+          ESCOLARIDAD = str_replace_all(
+            ESCOLARIDAD, c(
+              '^(SECUNDARIA)'   = 'MEDIA',
+              '^(PREPARATORIA)' = 'MEDIA',
+              '^(LICENCIATURA)' = 'SUPERIOR'
+            )
+          )
+        ) %>%
+        mutate(N_COMPLICACION = as.character(N_COMPLICACION)) %>%
+        mutate(
+          N_COMPLICACION = str_replace_all(
+            N_COMPLICACION, c(
+              '0' = 'NINGUNA',
+              '1' = 'PRIMERA',
+              '2' = 'SEGUNDA',
+              '3' = 'TERCERA'
+            )
+          )
+        ) %>%
+        table() %>%
+        prop.table() %>%
+        round(4) %>%
+        `*`(100) %>%
+        as.data.frame.matrix() %>%
+        mutate(across(everything(), ~ str_c(" ", "(", .x, "%", ")")))
+    ),
+    ~str_c(.x, .y),
+    .id = "colname"
+  ) %>%
+  datatable(
+    rownames = c("MEDIA", "SUPERIOR"),
+    class    = "compact stripe cell-border hover row-border",
+    options  = list(
+      ordering     = FALSE,
+      dom          = "t",
+      columnDefs   = list(list(targets = c(1:4), className = "dt-center" )),
+      initComplete = JS(
+        "function(settings, json) {",
+        "$(this.api().table().node()).css({'font-size': '12px'});",
+        "}"
+      )
+    )
+  )
+
 
 
 # Test: χ2 de Pearson

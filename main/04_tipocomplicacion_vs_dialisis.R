@@ -4,6 +4,44 @@
 
 # First analysis ----------------------------------------------------------
 
+# Tabla de contingencia
+# Variables: tipo de complicación & diálisis
+table_cont_tipocomplicacion_dialisis <-
+  data_main %>%
+  select(DIALISIS, COMPLICACION_ACTUAL) %>%
+  table() %>%
+  as.data.frame.matrix() %>% ##
+  mutate(across(everything(), as.character)) %>%
+  map2_df(
+    .y = (
+      data_main %>%
+        select(DIALISIS, COMPLICACION_ACTUAL) %>%
+        table() %>%
+        prop.table() %>%
+        round(4) %>%
+        `*`(100) %>%
+        as.data.frame.matrix() %>%
+        mutate(across(everything(), ~ str_c(" ", "(", .x, "%", ")")))
+    ),
+    ~str_c(.x, .y),
+    .id = "colname"
+  ) %>%
+  datatable(
+    rownames = c("AUTOMATIZADA", "MANUAL"),
+    class    = "compact stripe cell-border hover row-border",
+    options  = list(
+      ordering     = FALSE,
+      dom          = "t",
+      columnDefs   = list(list(targets = c(1:6), className = "dt-center" )),
+      initComplete = JS(
+        "function(settings, json) {",
+        "$(this.api().table().node()).css({'font-size': '12px'});",
+        "}"
+      )
+    )
+  )
+
+
 
 # Plot: treemap-plot
 # Frecuencia de Tipo de complicaciones & Tipo de diálisis
