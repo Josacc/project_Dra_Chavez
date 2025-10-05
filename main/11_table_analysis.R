@@ -1,7 +1,7 @@
 # Table analysis
 
 
-data_table_analysis <- data_raw %>%
+data_for_analysis <- data_raw %>%
   select(-c(NOMBRE, NSS, AGREGADO)) %>%
   rename(
     c(
@@ -48,7 +48,19 @@ list_chi2_tests <-
   `names<-`(c("COMPLICACION_ACTUAL", "N_COMPLICACION"))
 
 
-data_table_analysis %>%
+list_anova_tests <-
+  map(
+    c("COMPLICACION_ACTUAL", "N_COMPLICACION"),
+    .f = \(complicacion) data_table_analysis %>%
+      aov(EDAD ~ pluck(., complicacion), data = .) %>%
+      summary() %>%
+      pluck(1)
+  ) %>%
+  `names<-`(c("COMPLICACION_ACTUAL", "N_COMPLICACION"))
+
+
+data_table_analysis <-
+  data_table_analysis %>%
   keep(is.factor) %>%
   select(-COMPLICACION_PREVIA) %>%
   names() %>%
@@ -65,18 +77,56 @@ data_table_analysis %>%
     ) %>%
       round(digits = 4)
   ) %>%
-  filter(!(is.na(`Valor p`) | (Variable == "COMPLICACION_ACTUAL" & `Factor de estudio` == "N_COMPLICACION")))
+  filter(!(is.na(`Valor p`) | (Variable == "COMPLICACION_ACTUAL" & `Factor de estudio` == "N_COMPLICACION"))) %>%
+  add_row(
+    tibble(Variable = rep("EDAD", 2), `Factor de estudio` = c("COMPLICACION_ACTUAL", "N_COMPLICACION"), Prueba = rep("ANOVA one-way", 2)) %>%
+      mutate(
+        `Valor p` = map_dbl(
+          `Factor de estudio`,
+          \(factor_est) pluck(list_anova_tests, factor_est, "Pr(>F)", 1, .default = NA_real_)
+        ) %>%
+          round(4)
+      )
+  ) %>%
+  datatable(
+    rownames = FALSE,
+    class    = "compact stripe cell-border hover row-border",
+    options  = list(
+      pageLength   = -1,
+      ordering     = FALSE,
+      dom          = "t",
+      columnDefs   = list(list(targets = "_all", className = "dt-left" )),
+      initComplete = JS(
+        "function(settings, json) {",
+        "$(this.api().table().node()).css({'font-size': '12px'});",
+        "}"
+      )
+    )
+  )
 
 
 
-map_dbl(
-  c("COMPLICACION_ACTUAL", "N_COMPLICACION"),
-  .f = \(complicacion) data_table_analysis %>%
-    aov(EDAD ~ pluck(., complicacion), data = .) %>%
-    summary() %>%
-    pluck(1, "Pr(>F)", 1, .default = NA_real_)
-) %>%
-  round(4)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
