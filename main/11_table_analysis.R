@@ -1,7 +1,7 @@
 # Table analysis
 
 
-data_for_analysis <- data_raw %>%
+data_table_analysis <- data_raw %>%
   select(-c(NOMBRE, NSS, AGREGADO)) %>%
   rename(
     c(
@@ -59,7 +59,7 @@ list_anova_tests <-
   `names<-`(c("COMPLICACION_ACTUAL", "N_COMPLICACION"))
 
 
-data_table_analysis <-
+table_all_analysis <-
   data_table_analysis %>%
   keep(is.factor) %>%
   select(-COMPLICACION_PREVIA) %>%
@@ -68,7 +68,7 @@ data_table_analysis <-
   rep(2) %>%
   tibble() %>%
   `names<-`("Variable") %>%
-  mutate(`Factor de estudio` = c(rep("COMPLICACION_ACTUAL", 8), rep("N_COMPLICACION", 8)), Prueba = "χ² de Pearson") %>%
+  mutate(`Factor de estudio` = c(rep("COMPLICACION_ACTUAL", 8), rep("N_COMPLICACION", 8))) %>%
   mutate(
     `Valor p` = map2_dbl(
       Variable,
@@ -79,7 +79,7 @@ data_table_analysis <-
   ) %>%
   filter(!(is.na(`Valor p`) | (Variable == "COMPLICACION_ACTUAL" & `Factor de estudio` == "N_COMPLICACION"))) %>%
   add_row(
-    tibble(Variable = rep("EDAD", 2), `Factor de estudio` = c("COMPLICACION_ACTUAL", "N_COMPLICACION"), Prueba = rep("ANOVA one-way", 2)) %>%
+    tibble(Variable = rep("EDAD", 2), `Factor de estudio` = c("COMPLICACION_ACTUAL", "N_COMPLICACION")) %>%
       mutate(
         `Valor p` = map_dbl(
           `Factor de estudio`,
@@ -88,9 +88,24 @@ data_table_analysis <-
           round(4)
       )
   ) %>%
+  mutate(
+    `Factor de estudio` = str_replace_all(
+      `Factor de estudio`, c(
+        '^(COMPLICACION_ACTUAL)' = 'TIPO DE COMPLICACIÓN',
+        '^(N_COMPLICACION)'      = 'NÚMERO DE COMPLICACIÓN'
+      )
+    )
+  ) %>%
+  mutate(
+    Variable = str_replace_all(
+      Variable, c(
+        "^ANOS_TERAPIA"   = "TIEMPO DE TERAPIA",
+        "^N_COMPLICACION" = 'NÚMERO DE COMPLICACIÓN'
+      )
+    )
+  ) %>%
   datatable(
     rownames = FALSE,
-    class    = "compact stripe cell-border hover row-border",
     options  = list(
       pageLength   = -1,
       ordering     = FALSE,
@@ -103,32 +118,3 @@ data_table_analysis <-
       )
     )
   )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
