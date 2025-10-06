@@ -61,6 +61,7 @@ table_cont_tipocomplicacion_sexo <-
 
 # Test: χ2 de Pearson
 # Variables: tipo de complicación & sexo
+set.seed(1)
 chi2_tipocomplicacion_sexo <-
   data_main %>%
   select(SEXO, COMPLICACION_ACTUAL) %>%

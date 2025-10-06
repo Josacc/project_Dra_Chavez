@@ -107,6 +107,7 @@ plot_mosaic_timpoterapia_complicaciones <-
 
 # Test: χ2 de Pearson
 # Variables: tiempo de terapia & número de complicaciones
+set.seed(1)
 chi2_tiempo_complicacion <-
   data_main %>%
   select(ANOS_TERAPIA, N_COMPLICACION) %>%

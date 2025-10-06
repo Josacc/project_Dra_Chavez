@@ -101,6 +101,7 @@ plot_treemap_tipocomplicacion_escolaridad <-
 
 # Test: χ2 de Pearson
 # Variables: tipo de complicación & escolaridad
+set.seed(1)
 chi2_tipocomplicacion_escolaridad <-
   data_main %>%
   mutate(

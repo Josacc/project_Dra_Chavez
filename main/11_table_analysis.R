@@ -41,7 +41,7 @@ list_chi2_tests <-
         select(-c(COMPLICACION_PREVIA, all_of(complicacion))) %>%
         map2(
           .y = data_table_analysis %>% select(all_of(complicacion)),
-          ~ chisq.test(table(.x, .y), simulate.p.value = TRUE, B = 10000)
+          ~ chisq.test(table(.x, .y))
         )
     )
   ) %>%

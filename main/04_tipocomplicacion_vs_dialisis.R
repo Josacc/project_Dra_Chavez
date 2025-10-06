@@ -74,6 +74,7 @@ plot_treemap_complicacion_dialisis <-
 
 # Test: χ2 de Pearson
 # Variables: tipo de complicación & tipo de diálisis
+set.seed(1)
 chi2_tipodialisis_tipocomplicacion <-
   data_main %>%
   select(DIALISIS, COMPLICACION_ACTUAL) %>%

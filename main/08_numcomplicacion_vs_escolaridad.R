@@ -85,6 +85,7 @@ table_cont_numcomplicacion_escolaridad <-
 
 # Test: χ2 de Pearson
 # Variables: número de complicaciones & escolaridad
+set.seed(1)
 chi2_numcomplicacion_escolaridad <-
   data_main %>%
   mutate(
@@ -98,7 +99,7 @@ chi2_numcomplicacion_escolaridad <-
   ) %>%
   select(N_COMPLICACION, ESCOLARIDAD) %>%
   table() %>%
-  chisq.test()
+  chisq.test(simulate.p.value = TRUE, B = 10000)
 
 
 table_chi2_numcomplicacion_escolaridad <-
