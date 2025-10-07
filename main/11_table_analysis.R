@@ -74,8 +74,7 @@ table_all_analysis <-
       Variable,
       `Factor de estudio`,
       \(variable, factor_est) pluck(list_chi2_tests, factor_est, variable, "p.value", .default = NA_real_)
-    ) %>%
-      round(digits = 4)
+    )
   ) %>%
   filter(!(is.na(`Valor p`) | (Variable == "COMPLICACION_ACTUAL" & `Factor de estudio` == "N_COMPLICACION"))) %>%
   add_row(
@@ -84,8 +83,7 @@ table_all_analysis <-
         `Valor p` = map_dbl(
           `Factor de estudio`,
           \(factor_est) pluck(list_anova_tests, factor_est, "Pr(>F)", 1, .default = NA_real_)
-        ) %>%
-          round(4)
+        )
       )
   ) %>%
   mutate(
@@ -104,13 +102,22 @@ table_all_analysis <-
       )
     )
   ) %>%
+  mutate(`Valor p` = round(`Valor p`, 3)) %>%
+  mutate(significa = if_else(`Valor p`<0.05, true = " *", false = "")) %>%
+  mutate(`Valor p` = if_else(`Valor p`< 0.001, true = "< 0.001", false = as.character(`Valor p`))) %>%
+  mutate(`Valor p` = str_c(`Valor p`, significa)) %>%
+  select(-significa) %>%
   datatable(
     rownames = FALSE,
+    class    = "hover",
     options  = list(
       pageLength   = -1,
       ordering     = FALSE,
       dom          = "t",
-      columnDefs   = list(list(targets = "_all", className = "dt-left" )),
+      columnDefs   = list(
+        list(targets = "_all", className = "dt-left" ),
+        list(targets = 1, width = '350px')
+      ),
       initComplete = JS(
         "function(settings, json) {",
         "$(this.api().table().node()).css({'font-size': '12px'});",
