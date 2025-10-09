@@ -5,11 +5,11 @@ table_vars <-
   tribble(
     ~ Variable,               ~ Tipo,                ~ Valores,
     "SEXO"                   , "Categórica nominal" , c("HOMBRE", " MUJER"),
-    "EDAD"                   , "Continua (años)"    , "valores entre 18 y 92 años",
+    "EDAD"                   , "Continua (años)"    , "Rango de 18 a 92",
     "OCUPACIÓN"              , "Categórica nominal" , c("PENSIONADO", " TRABAJADOR"),
     "ESCOLARIDAD"            , "Categórica nominal" , c("MEDIA", " SUPERIOR"),
     "AÑOS DE TERAPIA"        , "Categórica ordinal" , c("1", " 2", " 3", " 4", " 5", " 6", " 7", " 8", " 9", " 17"),
-    "TIPO DE DÍALISIS"       , "Categórica nominal" , c("AUTOMATIZADA", " MANUAL"),
+    "TIPO DE DIÁLISIS"       , "Categórica nominal" , c("AUTOMATIZADA", " MANUAL"),
     "CUIDADOR"               , "Categórica nominal" , c("Pareja hombre escolaridad media (1)", " Pareja mujer escolaridad media (2)",
     " Pareja hombre escolaridad superior (3)", " Pareja mujer escolaridad superior (4)", " Familiar directo hombre escolaridad media (5)",
     " Familiar directo mujer escolaridad media (6)", " Familiar directo hombre escolaridad superior (7)", " Familiar directo mujer escolaridad media (8)", "\n Otro (9)"),
