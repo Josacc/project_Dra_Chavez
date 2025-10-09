@@ -83,6 +83,7 @@ plot_treemap_tipocomplicacion_escolaridad <-
   ) %>%
   filter(!is.na(Grupo)) %>%
   mutate(Porcentaje = (Conteo / sum(Conteo)) * 100) %>%
+  filter(Porcentaje > 6) %>%
   ggplot(
     aes(
       area  = Porcentaje,

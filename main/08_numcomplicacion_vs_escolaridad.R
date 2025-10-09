@@ -85,7 +85,6 @@ table_cont_numcomplicacion_escolaridad <-
 
 # Test: χ2 de Pearson
 # Variables: número de complicaciones & escolaridad
-set.seed(1)
 chi2_numcomplicacion_escolaridad <-
   data_main %>%
   mutate(
@@ -99,7 +98,7 @@ chi2_numcomplicacion_escolaridad <-
   ) %>%
   select(N_COMPLICACION, ESCOLARIDAD) %>%
   table() %>%
-  chisq.test(simulate.p.value = TRUE, B = 10000)
+  chisq.test()
 
 
 table_chi2_numcomplicacion_escolaridad <-
@@ -149,7 +148,7 @@ plot_mosaic_numcomplicaciones_escolaridad <-
   ggplot() +
   geom_mosaic(aes(x = product(ESCOLARIDAD, N_COMPLICACION), fill = ESCOLARIDAD), show.legend = FALSE) +
   scale_fill_npg() +
-  labs(x = 'Número de complicaciones asociadas', y = 'Escolaridad') +
+  labs(x = 'Número de complicación', y = 'Escolaridad') +
   theme_minimal() +
   theme(
     plot.title = element_text(vjust = 3),

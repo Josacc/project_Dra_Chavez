@@ -56,6 +56,7 @@ plot_treemap_complicacion_dialisis <-
   ) %>%
   filter(!is.na(Grupo)) %>%
   mutate(Porcentaje = (Conteo / sum(Conteo)) * 100) %>%
+  filter(Porcentaje > 3) %>%
   ggplot(
     aes(
       area  = Porcentaje,

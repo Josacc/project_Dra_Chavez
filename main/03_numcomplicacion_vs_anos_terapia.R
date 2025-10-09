@@ -142,7 +142,7 @@ table_chi2_tiempo_complicacion <-
   ggplot(aes(ANOS_TERAPIA, N_COMPLICACION, fill = ANOS_TERAPIA)) +
   geom_boxplot(show.legend = FALSE) +
   scale_fill_npg() +
-  scale_y_continuous(breaks = c(0, 1, 2, 3) , labels = c("cero", "una", "dos", "tres")) +
+  scale_y_continuous(breaks = c(0, 1, 2, 3), labels = c("cero", "una", "dos", "tres")) +
   ggtitle('Tiempo de terapia vs Cantidad de complicaciones') +
   labs(x = 'Tiempo de terapia sustitutiva (años)', y = 'Cantidad de complicaciones asociadas') +
   theme_minimal() +
