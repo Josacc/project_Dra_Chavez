@@ -13,7 +13,7 @@ table_vars <-
     "CUIDADOR"               , "Categórica nominal" , c("Pareja hombre escolaridad media (1)", " Pareja mujer escolaridad media (2)",
     " Pareja hombre escolaridad superior (3)", " Pareja mujer escolaridad superior (4)", " Familiar directo hombre escolaridad media (5)",
     " Familiar directo mujer escolaridad media (6)", " Familiar directo hombre escolaridad superior (7)", " Familiar directo mujer escolaridad media (8)", "\n Otro (9)"),
-    "TIPO DE COMPLICACIÓN"   , "Categórica nominal" , "FUGA POR ORIFICIO DE SALIDA, HERNIA, MIGRACIÓN DE CATETER, OBSTRUCCIÓN DE CATETER, PERITONITIS, TUNELITIS",
+    "TIPO DE COMPLICACIÓN"   , "Categórica nominal" , "FUGA POR ORIFICIO DE SALIDA, HERNIA, MIGRACIÓN DE CATÉTER, OBSTRUCCIÓN DE CATÉTER, PERITONITIS, TUNELITIS",
     "NÚMERO DE COMPLICACIÓN" , "Categórica ordinal" , "NINGUNA, PRIMERA, SEGUNDA, TERCERA"
 
   ) %>%

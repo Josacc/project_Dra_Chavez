@@ -2,7 +2,6 @@
 
 
 
-set.seed(1)
 list_chi2_tests <-
   map(
     c("COMPLICACION_ACTUAL", "N_COMPLICACION"),

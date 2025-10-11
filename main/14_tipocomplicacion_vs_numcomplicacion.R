@@ -14,8 +14,8 @@ plot_mosaic_tipocomplicacion_numcomplicacion <-
     labels = c(
       "FUGA POR ORIFICIO DE SALIDA" = "FOS",
       "HERNIA",
-      "MIGRACIÓN DE CATETER"        = "MC",
-      "OBSTRUCCIÓN DE CATETER"      = "OBSTRUCCIÓN \nDE CATETER",
+      "MIGRACIÓN DE CATÉTER"        = "MC",
+      "OBSTRUCCIÓN DE CATÉTER"      = "OBSTRUCCIÓN \nDE CATÉTER",
       "PERITONITIS",
       "TUNELITIS"
     )

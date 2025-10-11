@@ -29,6 +29,22 @@ data_main <-
       )
     )
   ) %>%
+  mutate(
+    COMPLICACION_PREVIA = str_replace_all(
+      COMPLICACION_PREVIA, c(
+        '^(MIGRACION DE CATETER)'   = 'MIGRACION DE CATÉTER',
+        '^(OBSTRUCCION DE CATETER)' = 'OBSTRUCCION DE CATÉTER'
+      )
+    )
+  ) %>%
+  mutate(
+    COMPLICACION_ACTUAL = str_replace_all(
+      COMPLICACION_ACTUAL, c(
+        '^(MIGRACION DE CATETER)'   = 'MIGRACION DE CATÉTER',
+        '^(OBSTRUCCION DE CATETER)' = 'OBSTRUCCION DE CATÉTER'
+      )
+    )
+  ) %>%
   mutate(N_COMPLICACION = as.double(N_COMPLICACION)) %>%
   mutate(ESCOLARIDAD    = str_replace(ESCOLARIDAD, pattern = 'SECUDNARIA', replacement = 'SECUNDARIA')) %>%
   mutate(SEXO           = str_replace(SEXO, pattern = 'A', replacement = 'F')) %>%
@@ -75,6 +91,22 @@ data_table_analysis <-
         '^(SECUNDARIA)'   = 'MEDIA',
         '^(PREPARATORIA)' = 'MEDIA',
         '^(LICENCIATURA)' = 'SUPERIOR'
+      )
+    )
+  ) %>%
+  mutate(
+    COMPLICACION_PREVIA = str_replace_all(
+      COMPLICACION_PREVIA, c(
+        '^(MIGRACION DE CATETER)'   = 'MIGRACION DE CATÉTER',
+        '^(OBSTRUCCION DE CATETER)' = 'OBSTRUCCION DE CATÉTER'
+      )
+    )
+  ) %>%
+  mutate(
+    COMPLICACION_ACTUAL = str_replace_all(
+      COMPLICACION_ACTUAL, c(
+        '^(MIGRACION DE CATETER)'   = 'MIGRACION DE CATÉTER',
+        '^(OBSTRUCCION DE CATETER)' = 'OBSTRUCCION DE CATÉTER'
       )
     )
   ) %>%
